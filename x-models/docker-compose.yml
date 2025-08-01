@@ -1,0 +1,47 @@
+services:
+  app:
+    build: .
+    container_name: x_models_app
+    ports:
+      - "3000:3000"
+
+    # This is the key change.
+    # 1. Mount the local code into /app
+    # 2. Mount a DEDICATED volume for node_modules on top, hiding the local one.
+    volumes:
+      - .:/app
+      - node_modules_volume:/app/node_modules
+
+    entrypoint: /app/entrypoint.sh
+    command: pnpm dev
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/mydb
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=a_very_secret_string_for_now
+
+  db:
+    image: postgres:16-alpine
+    container_name: x_models_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# We declare our named volumes here
+volumes:
+  postgres_data:
+  node_modules_volume: {} # This creates the dedicated volume for node_modules
