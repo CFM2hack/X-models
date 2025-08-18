@@ -1,4 +1,5 @@
-// This is your Prisma schema file.
+// This is the complete and definitive schema for the x-models project.
+// Version 2.0 - Relational Structure
 
 generator client {
   provider = "prisma-client-js"
@@ -10,6 +11,15 @@ datasource db {
 }
 
 //#####################################################
+// ENUMS & CUSTOM TYPES
+//#####################################################
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+//#####################################################
 //  APPLICATION MODELS
 //#####################################################
 
@@ -18,82 +28,107 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime?
-  password      String?   // Hashed password for credentials login
-  image         String?   // URL for profile picture (e.g., from Google)
+  password      String?
+  image         String?   // The user's avatar, e.g., from Google login
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // Relation to the model's public profile
-  profile Profile?
+  model Model? // A user can have one model profile
 
   // For NextAuth.js
   accounts Account[]
   sessions Session[]
 }
 
-model Profile {
+// RENAMED from Profile to Model for clarity
+model Model {
   id          String    @id @default(cuid())
   userId      String    @unique
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Public-facing portfolio info
-  publicName  String    @unique // The model's display name, e.g., "jane-doe"
-  handle      String?   // NEW
+  // Public-facing info
+  publicName  String    @unique // The unique URL slug, e.g., "elara-vance"
+  handle      String?   // e.g., "@elaravance"
   bio         String?   @db.Text
-  location    String?   // NEW
-  agency      String?   // NEW
-  dateOfBirth DateTime? // NEW (instead of age)
-  isActive    Boolean   @default(false) // Becomes true only after successful payment
+  location    String?
+  agency      String?
+  dateOfBirth DateTime?
+  isActive    Boolean   @default(false)
 
-  // Portfolio content - Storing as JSON for flexibility
-  photos      Json[]    // Example: [{ "url": "...", "order": 1 }, ...]
-  videos      Json[]    // Example: [{ "url": "...", "type": "youtube" }]
+  // Visuals
+  coverImageUrl   String?
 
-  //  Flexible data fields - Services & Rates
-  stats       Json?     // NEW
-  services    Json?     // Example: { "photoshoot": 500, "runway": 1000 }
+  // Relations to dedicated data tables (replaces Json fields)
+  stats       Stats?
+  portfolio   PortfolioItem[] // A model has a portfolio of many items
 
-  // Contact & Booking Info
-  whatsappNumber String?
-
-  // Relations to our paid features
+  // Relations to paid features
   story         Story?
   featuredSlot  FeaturedSlot?
   subscription  Subscription?
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
+// Dedicated table for model statistics
+model Stats {
+  id      String @id @default(cuid())
+  modelId String @unique
+  model   Model  @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  height  String? // e.g., "5'11\""
+  weight  String? // e.g., "125 lbs"
+  bust    String? // e.g., "34B"
+  waist   String? // e.g., "25\""
+  hips    String? // e.g., "35\""
+}
+
+// Dedicated table for ALL portfolio items (images AND videos)
+model PortfolioItem {
+  id      String    @id @default(cuid())
+  modelId String
+  model   Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+
+  url     String    // URL to the image or video file
+  type    MediaType // This is either IMAGE or VIDEO
+  order   Int       // To control the display order in the portfolio
+  altText String?   // Good for accessibility and SEO
+
+  createdAt DateTime @default(now())
+}
+
+// Dedicated table for paid subscriptions
 model Subscription {
   id                   String   @id @default(cuid())
-  profileId            String   @unique
-  profile              Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  modelId              String   @unique
+  model                Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
 
   stripeCustomerId     String   @unique
   stripeSubscriptionId String   @unique
-  status               String   // e.g., "active", "canceled", "past_due"
+  status               String
   currentPeriodEnd     DateTime
 }
 
+// Dedicated table for paid "Story" features
 model Story {
-  id          String    @id @default(cuid())
-  profileId   String    @unique
-  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  mediaUrl    String
-  expiresAt   DateTime
-  createdAt   DateTime  @default(now())
+  id        String    @id @default(cuid())
+  modelId   String    @unique
+  model     Model     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  mediaUrl  String
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
 }
 
+// Dedicated table for paid "Featured" slots
 model FeaturedSlot {
-  id          String    @id @default(cuid())
-  profileId   String    @unique
-  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
-  isActive    Boolean   @default(true)
-  expiresAt   DateTime
-  createdAt   DateTime  @default(now())
+  id        String   @id @default(cuid())
+  modelId   String   @unique
+  model     Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  isActive  Boolean  @default(true)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
-
 
 //#####################################################
 //  MODELS FOR NEXT-AUTH AUTHENTICATION
@@ -105,12 +140,12 @@ model Account {
   type               String
   provider           String
   providerAccountId  String
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
+  refresh_token      String?
+  access_token       String?
   expires_at         Int?
   token_type         String?
   scope              String?
-  id_token           String? @db.Text
+  id_token           String?
   session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

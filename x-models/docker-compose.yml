@@ -1,19 +1,18 @@
+# This is the final, correct, and definitive docker-compose.yml for a DEVELOPMENT environment.
+
 services:
   app:
+    # Build the image using our new development Dockerfile
     build: .
     container_name: x_models_app
     ports:
       - "3000:3000"
 
-    # This is the key change.
-    # 1. Mount the local code into /app
-    # 2. Mount a DEDICATED volume for node_modules on top, hiding the local one.
+    # This correctly mounts our local code for live-reloading
+    # and creates a separate volume for node_modules to prevent conflicts.
     volumes:
       - .:/app
       - node_modules_volume:/app/node_modules
-
-    entrypoint: /app/entrypoint.sh
-    command: pnpm dev
 
     depends_on:
       db:
@@ -22,7 +21,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/mydb
       - NEXTAUTH_URL=http://localhost:3000
-      - NEXTAUTH_SECRET=a_very_secret_string_for_now
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 
   db:
     image: postgres:16-alpine
@@ -41,7 +40,6 @@ services:
       timeout: 5s
       retries: 5
 
-# We declare our named volumes here
 volumes:
   postgres_data:
-  node_modules_volume: {} # This creates the dedicated volume for node_modules
+  node_modules_volume: {}
