@@ -2,6 +2,10 @@
 
 generator client {
   provider = "prisma-client-js"
+  // --- THIS IS THE FINAL FIX ---
+  // This line tells Prisma to generate the correct engine for both your Mac ("native")
+  // and the Docker container ("debian-openssl-3.0.x").
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
