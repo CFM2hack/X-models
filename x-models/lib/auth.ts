@@ -1,16 +1,18 @@
 // In: lib/auth.ts
 
 import NextAuth from "next-auth"
+// --- FIX PART 1: Import the NextAuthConfig type ---
+import type { NextAuthConfig } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 
 const prisma = new PrismaClient()
 
-// 1. Define the full configuration object
-const authConfig = {
+// --- FIX PART 2: Explicitly apply the NextAuthConfig type ---
+const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
@@ -24,16 +26,21 @@ const authConfig = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        const { email, password } = credentials;
+        if (typeof email !== 'string' || typeof password !== 'string') {
           return null;
         }
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
+          where: { email }
         });
+
         if (!user || !user.password) {
           return null;
         }
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
         if (!isPasswordValid) {
           return null;
         }
@@ -42,14 +49,15 @@ const authConfig = {
     })
   ],
   session: {
+    // Now TypeScript knows this must be "jwt" or "database"
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
 
-// 2. Call NextAuth with the config and destructure the results
+// Call NextAuth with the now correctly-typed config
 export const {
-  handlers: { GET, POST }, // <-- THIS IS THE KEY FIX
+  handlers: { GET, POST },
   auth,
   signIn,
   signOut
