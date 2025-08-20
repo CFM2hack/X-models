@@ -44,3 +44,6 @@ next-env.d.ts
 .dockerignore
 
 /app/generated/prisma
+
+#ignore pnpm store
+/pnpm-store/
