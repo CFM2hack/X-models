@@ -44,12 +44,15 @@ importers:
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.6.0
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@4.0.0-alpha.16)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.1
         version: 3.3.1
       '@tailwindcss/postcss':
-        specifier: ^4.0.0-alpha.16
+        specifier: 4.1.12
         version: 4.1.12
       '@types/node':
         specifier: ^20.14.2
@@ -62,7 +65,7 @@ importers:
         version: 18.3.7(@types/react@18.3.23)
       autoprefixer:
         specifier: ^10.4.19
-        version: 10.4.21(postcss@8.5.6)
+        version: 10.4.21(postcss@8.4.31)
       eslint:
         specifier: ^9.4.0
         version: 9.33.0(jiti@2.5.1)
@@ -70,17 +73,14 @@ importers:
         specifier: ^15.0.0
         version: 15.4.7(eslint@9.33.0(jiti@2.5.1))(typescript@5.9.2)
       postcss:
-        specifier: ^8.4.38
-        version: 8.5.6
+        specifier: ^8.4.31
+        version: 8.4.31
       prisma:
         specifier: ^5.15.0
         version: 5.22.0
       tailwindcss:
         specifier: 4.0.0-alpha.16
         version: 4.0.0-alpha.16
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.0-alpha.16)
       typescript:
         specifier: ^5.4.5
         version: 5.9.2
@@ -2702,14 +2702,14 @@ snapshots:
 
   async-function@1.0.0: {}
 
-  autoprefixer@10.4.21(postcss@8.5.6):
+  autoprefixer@10.4.21(postcss@8.4.31):
     dependencies:
       browserslist: 4.25.3
       caniuse-lite: 1.0.30001735
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.1.1
-      postcss: 8.5.6
+      postcss: 8.4.31
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:

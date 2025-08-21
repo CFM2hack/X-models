@@ -1,27 +1,15 @@
 # In: docker-compose.yml
 
+# The 'version' attribute has been removed as it is obsolete.
 services:
   app:
-    build: .
+    build:
+      context: .
     ports:
       - "3000:3000"
     volumes:
-      # --- THIS IS THE FIX ---
-      # Instead of mounting the entire directory, we mount only what we need for live-reloading.
-      # We explicitly DO NOT mount node_modules.
-      - ./app:/app/app
-      - ./components:/app/components
-      - ./lib:/app/lib
-      - ./prisma:/app/prisma
-      - ./public:/app/public
-      - ./package.json:/app/package.json
-      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
-      - ./next.config.mjs:/app/next.config.mjs
-      - ./tsconfig.json:/app/tsconfig.json
-      - ./tailwind.config.mjs:/app/tailwind.config.mjs
-      # This line now works as intended, because there is no conflict.
-      # It will be populated with the correctly-built node_modules from the image.
-      - node_modules_volume:/app/node_modules
+      - .:/app
+      - /app/node_modules
 
     command: pnpm dev
 
@@ -52,4 +40,3 @@ services:
 
 volumes:
   postgres_data:
-  node_modules_volume: {}

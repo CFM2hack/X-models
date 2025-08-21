@@ -1,103 +1,83 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ModelCard } from "@/components/ui/model-card";
+
+// Hardcoded demo data, replace with real DB fetch later
+const models = [
+  {
+    id: "elara-vance",
+    publicName: "elara-vance",
+    handle: "@elaravance",
+    profileImage: "https://picsum.photos/seed/elara/400/400",
+    gridSpan: "col-span-12 sm:col-span-6 lg:col-span-4 row-span-2",
+  },
+  {
+    id: "julian-cross",
+    publicName: "julian-cross",
+    handle: "@juliancross",
+    profileImage: "https://picsum.photos/seed/julian/400/400",
+    gridSpan: "col-span-12 sm:col-span-6 lg:col-span-4",
+  },
+  {
+    id: "anya-petrova",
+    publicName: "anya-petrova",
+    handle: "@anyap",
+    profileImage: "https://picsum.photos/seed/anya/400/400",
+    gridSpan: "col-span-12 sm:col-span-6 lg:col-span-4",
+  },
+  {
+    id: "liam-chen",
+    publicName: "liam-chen",
+    handle: "@liamchen",
+    profileImage: "https://picsum.photos/seed/liam/400/400",
+    gridSpan: "col-span-12 sm:col-span-6 lg:col-span-5 row-span-2",
+  },
+  {
+    id: "sophia-rodriguez",
+    publicName: "sophia-rodriguez",
+    handle: "@sophia.r",
+    profileImage: "https://picsum.photos/seed/sophia/400/400",
+    gridSpan: "col-span-12 sm:col-span-6 lg:col-span-3",
+  },
+  {
+    id: "kai-nakamura",
+    publicName: "kai-nakamura",
+    handle: "@kainakamura",
+    profileImage: "https://picsum.photos/seed/kai/400/400",
+    gridSpan: "col-span-12 sm:col-span-12 lg:col-span-4",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="container mx-auto px-4 py-8">
+      <div className="space-y-12">
+        <div className="text-center max-w-2xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-text-primary">
+            Discover Your Muse
+          </h1>
+          <p className="mt-4 text-lg text-text-secondary">
+            A curated marketplace of professional models. Explore unique portfolios and find the perfect face for your next project.
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="grid grid-cols-12 auto-rows-[200px] sm:auto-rows-[240px] md:auto-rows-[280px] gap-4 md:gap-6">
+          {models.map((model) => (
+            <div key={model.id} className={model.gridSpan}>
+              <Link href={`/models/${model.publicName}`} legacyBehavior>
+
+                  <ModelCard
+                    profile={{
+                      ...model,
+                      isActive: true,
+                      photos: [],
+                      videos: [],
+                    }}
+                    isCover
+                  />
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
