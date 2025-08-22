@@ -1,0 +1,19 @@
+
+@import "tailwindcss";
+
+/* Define your design tokens inline using @theme */
+@theme inline {
+  --color-background: hsl(240 0% 95%);
+  --color-foreground: hsl(240 0% 29%);
+  --color-border: hsl(240 4% 80%);
+  --font-poppins: "Poppins", sans-serif;
+}
+
+/* Apply design tokens in base styles */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-poppins);
+  }
+}
