@@ -49,21 +49,21 @@ const models = [
 
 export default function Home() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="space-y-12">
         <div className="text-center max-w-2xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-text-primary">
+          <h1 className="text-4xl md:text-5xl font-bold font-sans text-text-primary">
             Discover Your Muse
           </h1>
           <p className="mt-4 text-lg text-text-secondary">
             A curated marketplace of professional models. Explore unique portfolios and find the perfect face for your next project.
           </p>
         </div>
+
         <div className="grid grid-cols-12 auto-rows-[200px] sm:auto-rows-[240px] md:auto-rows-[280px] gap-4 md:gap-6">
           {models.map((model) => (
-            <div key={model.id} className={model.gridSpan}>
-              <Link href={`/models/${model.publicName}`} legacyBehavior>
-
+            <div key={model.id} className={'${model.gridSpan} flex h-full'}>
+              <Link href={`/models/${model.publicName}`} className="w-full">
                   <ModelCard
                     profile={{
                       ...model,
@@ -71,7 +71,7 @@ export default function Home() {
                       photos: [],
                       videos: [],
                     }}
-                    isCover
+                    isCover={false} // no blueborder on homepage cards
                   />
               </Link>
             </div>
