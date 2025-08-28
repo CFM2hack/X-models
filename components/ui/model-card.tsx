@@ -26,7 +26,6 @@ export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
     <div
       className={`relative rounded-lg shadow-md p-4 bg-white
         ${profile.gridSpan || "col-span-1"}
-        ${isCover ? "border-2 border-blue-500" : ""}
       `}
     >
       <Image
@@ -36,6 +35,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
         height={400}
         className="rounded-md w-full object-cover mb-4"
         priority={isCover}
+        unoptimized={true}
       />
 
       <h2 className="text-xl font-semibold">{profile.publicName}</h2>
@@ -57,6 +57,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
                 width={80}
                 height={80}
                 className="object-cover rounded"
+                unoptimized={true}
               />
             ))}
           </div>
@@ -85,3 +86,5 @@ export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
     </div>
   );
 };
+export default ModelCard;
+
