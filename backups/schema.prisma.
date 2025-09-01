@@ -1,0 +1,139 @@
+// This is your Prisma schema file.
+
+generator client {
+  provider = "prisma-client-js"
+  // --- THIS IS THE FINAL FIX ---
+  // This line tells Prisma to generate the correct engine for both your Mac ("native")
+  // and the Docker container ("debian-openssl-3.0.x").
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//#####################################################
+//  APPLICATION MODELS
+//#####################################################
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?   // Hashed password for credentials login
+  image         String?   // URL for profile picture (e.g., from Google)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relation to the model's public profile
+  profile Profile?
+
+  // For NextAuth.js
+  accounts Account[]
+  sessions Session[]
+}
+
+model Profile {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Public-facing portfolio info
+  publicName  String    @unique // The model's display name, e.g., "jane-doe"
+  handle      String?   // NEW
+  bio         String?   @db.Text
+  location    String?   // NEW
+  agency      String?   // NEW
+  dateOfBirth DateTime? // NEW (instead of age)
+  isActive    Boolean   @default(false) // Becomes true only after successful payment
+
+  // Portfolio content - Storing as JSON for flexibility
+  photos      Json[]    // Example: [{ "url": "...", "order": 1 }, ...]
+  videos      Json[]    // Example: [{ "url": "...", "type": "youtube" }]
+
+  //  Flexible data fields - Services & Rates
+  stats       Json?     // NEW
+  services    Json?     // Example: { "photoshoot": 500, "runway": 1000 }
+
+  // Contact & Booking Info
+  whatsappNumber String?
+
+  // Relations to our paid features
+  story         Story?
+  featuredSlot  FeaturedSlot?
+  subscription  Subscription?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  profileId            String   @unique
+  profile              Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  stripeCustomerId     String   @unique
+  stripeSubscriptionId String   @unique
+  status               String   // e.g., "active", "canceled", "past_due"
+  currentPeriodEnd     DateTime
+}
+
+model Story {
+  id          String    @id @default(cuid())
+  profileId   String    @unique
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  mediaUrl    String
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+}
+
+model FeaturedSlot {
+  id          String    @id @default(cuid())
+  profileId   String    @unique
+  profile     Profile   @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  isActive    Boolean   @default(true)
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+}
+
+
+//#####################################################
+//  MODELS FOR NEXT-AUTH AUTHENTICATION
+//#####################################################
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
