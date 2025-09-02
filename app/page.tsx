@@ -32,7 +32,7 @@ export default async function Home() {
   );
 
   return (
-    <div className="container mx-auto px-6 py-12 min-h-screen">
+    <div className="container mx-auto px-6 py-12">
       <div className="space-y-12">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold font-sans text-text-primary">
@@ -64,7 +64,7 @@ export default async function Home() {
 
             return (
               <div key={model.id} className={`${gridSpan} flex h-full`}>
-                <Link href={`/models/${model.publicName}`} className="w-full">
+                <Link href={`/models/${model.publicName}`} className="w-full h-full">
                   <ModelCard profile={cardProfile} isCover={false} />
                 </Link>
               </div>
