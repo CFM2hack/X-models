@@ -8,8 +8,10 @@ interface PageProps {
 const DEFAULT_PROFILE_IMAGE = "/default-profile-image.png";
 const DEFAULT_GRID_SPAN = "col-span-12 sm:col-span-6 lg:col-span-4";
 
-export default async function Page({ params }: PageProps) {
+export default async function ModelPage({ params }: PageProps) {
+  // await params here as required by Next.js 15+
   const { id } = await params;
+
   const profile = await fetchNormalizedProfile(id);
 
   if (!profile) {
@@ -31,7 +33,7 @@ export default async function Page({ params }: PageProps) {
           videos: profile.videos ?? [],
           profileImage: profile.profileImage ?? DEFAULT_PROFILE_IMAGE,
           gridSpan: profile.gridSpan ?? DEFAULT_GRID_SPAN,
-          handle: profile.handle ?? "unknown",  // <-- Add this fallback for non-null
+          handle: profile.handle ?? "unknown",
         }}
         isCover
       />
