@@ -47,3 +47,13 @@ next-env.d.ts
 
 #ignore pnpm store
 /pnpm-store/
+
+#ignore untracked files from other projects
+le-wagon/
+dotfiles/
+models/Multiverse/
+models/x-models-final-backup/
+GAGA2025/
+frontal/
+pastemax/
+models/x-models/x-models/

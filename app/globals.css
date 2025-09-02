@@ -1,9 +1,5 @@
-
 @import "tailwindcss";
-
-@plugin "tailwindcss-animate";
-
-@custom-variant dark (&:is(.dark *));
+@import "tw-animate-css";
 
 /* Define your design tokens inline using @theme */
 @theme inline {
@@ -45,19 +41,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* Apply design tokens in base styles */
-@layer base {
-  body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-poppins);
-  }
-}
-
+/* OKLCH vars for light mode (maintain your design) */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -87,8 +73,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
 }
 
+/* OKLCH vars for dark mode (maintain your design) */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -123,11 +112,14 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Apply design tokens in base styles */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-poppins);
   }
 }
