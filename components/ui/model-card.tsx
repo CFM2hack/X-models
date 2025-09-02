@@ -7,7 +7,7 @@ export type Video = { url: string; type?: string };
 export interface Profile {
   id: string;
   publicName: string;
-  handle: string;
+  handle: string | null;
   isActive: boolean;
   photos: Photo[];
   videos: Video[];
@@ -20,10 +20,12 @@ interface ModelCardProps {
 }
 
 export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
+  const profileImageUrl = profile.photos?.[0]?.url || "/default-profile-image.png";
+
   return (
     <div className="relative rounded-lg shadow-md p-4 bg-white flex flex-col h-full">
       <Image
-        src={profile.profileImage}
+        src={profileImageUrl}
         alt={`${profile.publicName} Profile Image`}
         width={400}
         height={400}
@@ -33,7 +35,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({ profile, isCover }) => {
       />
 
       <h2 className="text-xl font-semibold">{profile.publicName}</h2>
-      <p className="text-gray-500">@{profile.handle}</p>
+      <p className="text-gray-500">@{profile.handle ?? 'unknown'}</p>
 
       <p className={`mt-2 ${profile.isActive ? "text-green-600" : "text-red-600"}`}>
         {profile.isActive ? "Active" : "Inactive"}

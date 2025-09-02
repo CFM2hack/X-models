@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ModelCard } from "@/components/ui/model-card";
+import { HomepageModelCard } from "@/components/ui/homepage-model-card";
 import { fetchNormalizedProfile } from "@/lib/prisma-fetch";
 import { prisma } from "@/lib/prisma";
 
-const DEFAULT_PROFILE_IMAGE = "/default-profile-image.png";
+
 
 const defaultSpans = [
   "col-span-6 row-span-3",
@@ -49,23 +49,10 @@ export default async function Home() {
 
             const gridSpan = model.gridSpan ?? defaultSpans[index % defaultSpans.length];
 
-            // Derive profileImage from photos array or fallback
-            const profileImage = model.photos?.[0]?.url || DEFAULT_PROFILE_IMAGE;
-
-            // Exclude gridSpan from profile passed to ModelCard to avoid TS errors
-            const { gridSpan: _, ...cardProfile } = {
-              ...model,
-              isActive: model.isActive ?? true,
-              photos: model.photos ?? [],
-              videos: model.videos ?? [],
-              profileImage,
-              handle: model.handle ?? "unknown",
-            };
-
             return (
-              <div key={model.id} className={`${gridSpan} flex h-full`}>
+              <div key={model.id} className={`${gridSpan} flex h-full overflow-hidden group`}>
                 <Link href={`/models/${model.publicName}`} className="w-full h-full">
-                  <ModelCard profile={cardProfile} isCover={false} />
+                  <HomepageModelCard profile={model} />
                 </Link>
               </div>
             );

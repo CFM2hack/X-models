@@ -5,8 +5,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-const DEFAULT_PROFILE_IMAGE = "/default-profile-image.png";
-const DEFAULT_GRID_SPAN = "col-span-12 sm:col-span-6 lg:col-span-4";
+
 
 export default async function ModelPage({ params }: PageProps) {
   // await params here as required by Next.js 15+
@@ -24,19 +23,7 @@ export default async function ModelPage({ params }: PageProps) {
 
   return (
     <main className="max-w-5xl mx-auto p-6">
-      <ModelCard
-        key={profile.id}
-        profile={{
-          ...profile,
-          isActive: profile.isActive ?? true,
-          photos: profile.photos ?? [],
-          videos: profile.videos ?? [],
-          profileImage: profile.profileImage ?? DEFAULT_PROFILE_IMAGE,
-          gridSpan: profile.gridSpan ?? DEFAULT_GRID_SPAN,
-          handle: profile.handle ?? "unknown",
-        }}
-        isCover
-      />
+      <ModelCard key={profile.id} profile={profile} isCover />
     </main>
   );
 }

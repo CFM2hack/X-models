@@ -9,7 +9,7 @@ import {
 } from "./prisma-normalize";
 
 const DEFAULT_PROFILE_IMAGE = "https://picsum.photos/seed/elara/400/400";
-const DEFAULT_GRID_SPAN = "col-span-12 sm:col-span-6 lg:col-span-4";
+
 
 export async function fetchNormalizedProfiles() {
   const profilesRaw: Profile[] = await prisma.profile.findMany();
@@ -30,7 +30,7 @@ export async function fetchNormalizedProfiles() {
         normalizedPhotos.length > 0
           ? normalizedPhotos[0].url
           : DEFAULT_PROFILE_IMAGE,
-      gridSpan: DEFAULT_GRID_SPAN,
+
     };
   });
 }
@@ -57,6 +57,6 @@ export async function fetchNormalizedProfile(publicName: string) {
       normalizedPhotos.length > 0
         ? normalizedPhotos[0].url
         : DEFAULT_PROFILE_IMAGE,
-    gridSpan: DEFAULT_GRID_SPAN,
+    
   };
 }
